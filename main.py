@@ -1,6 +1,8 @@
 import uvicorn
 from fastapi import FastAPI
 from app.model import PostSchema
+from app.model import PostSchema, UserSchema, UserLoginSchema
+from app.auth.jwt_handler import signJWT
 
 posts = [
     {
@@ -24,18 +26,11 @@ users = []
 
 app = FastAPI()
 
-#Test
-@app.get("/", tags=["test"])
-def greet():
-    return{"hello": "world"}
-
-#Get all posts
 @app.get("/posts", tags=["posts"])
 def get_posts():
     return{"data": posts}
 
 
-#Get one post
 @app.get("/posts/{id}", tags=["posts"])
 def get_one_post(id: int):
     if id > len(posts):
@@ -48,7 +43,6 @@ def get_one_post(id: int):
                 "data": post
             }
 
-#Handler for creating a new post
 @app.post("/posts", tags=["posts"])
 def add_post(post: PostSchema):
     post.id = len(posts) + 1
@@ -56,3 +50,4 @@ def add_post(post: PostSchema):
     return {
         "info": "Post added successfully"
     }
+
