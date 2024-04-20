@@ -32,7 +32,7 @@ def greet():
 #Get all posts
 @app.get("/posts", tags=["posts"])
 def get_posts():
-    return{"data": "posts"}
+    return{"data": posts}
 
 
 #Get one post
@@ -47,3 +47,12 @@ def get_one_post(id: int):
             return {
                 "data": post
             }
+
+#Handler for creating a new post
+@app.post("/posts", tags=["posts"])
+def add_post(post: PostSchema):
+    post.id = len(posts) + 1
+    posts.append(post.dict())
+    return {
+        "info": "Post added successfully"
+    }
